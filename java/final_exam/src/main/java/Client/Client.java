@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kma.final_exam.de1cau1;
+package Client;
 
 /**
  *
  * @author quoct
  */
-public class Server {
+public class Client {
     
 }

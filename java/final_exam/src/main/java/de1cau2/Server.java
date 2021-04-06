@@ -68,6 +68,7 @@ public class Server {
                     break;
                 }
             }
+            sv.close();
         }catch(IOException e){
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
         }

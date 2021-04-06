@@ -52,5 +52,11 @@ public class Question {
     public void setAnswer(String answer) {
         this.answer = answer;
     }
-    
+    public String showQuestionAnswerList(){
+        String s="";
+        for(int i=0; i<questionAnswer.length; i++){
+            s+=questionAnswer[i];
+        }
+        return s;
+    }
 }

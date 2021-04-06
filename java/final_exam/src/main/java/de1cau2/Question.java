@@ -12,10 +12,10 @@ package de1cau2;
 public class Question {
     private String id;
     private String questionName;
-    private String[] questionAnswer;
+    private String questionAnswer;
     private String answer;
 
-    public Question(String id, String questionName, String[] questionAnswer, String answer) {
+    public Question(String id, String questionName, String questionAnswer, String answer) {
         this.id = id;
         this.questionName = questionName;
         this.questionAnswer = questionAnswer;
@@ -37,11 +37,11 @@ public class Question {
         this.questionName = questionName;
     }
 
-    public String[] getQuestionAnswer() {
+    public String getQuestionAnswer() {
         return questionAnswer;
     }
 
-    public void setQuestionAnswer(String[] questionAnswer) {
+    public void setQuestionAnswer(String questionAnswer) {
         this.questionAnswer = questionAnswer;
     }
 
@@ -51,12 +51,5 @@ public class Question {
 
     public void setAnswer(String answer) {
         this.answer = answer;
-    }
-    public String showQuestionAnswerList(){
-        String s="";
-        for(int i=0; i<questionAnswer.length; i++){
-            s+=questionAnswer[i];
-        }
-        return s;
     }
 }

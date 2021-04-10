@@ -3,60 +3,37 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de6cau2;
+package de7cau2;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  *
  * @author oem
  */
 public class Server {
-    ArrayList<ChungCu> listCC;
+    ArrayList<KhachHang> listKH;
     
-    public String hienThiDanhSach(){
-        String s="";
-        for(ChungCu list: listCC){
-            s+=list.getSoNha()+"\n";
-            s+=Integer.toString(list.getGiaBan())+"\n";
-            s+=Boolean.toString(list.getTinhTrang())+"\n";
-        }
-        return s;
-    }
-    public void themNha(String s){
-        String[] arr=s.split("\\$");
-        ChungCu cc= new ChungCu(arr[0], Integer.parseInt(arr[1]), Boolean.parseBoolean(arr[2]));
-        listCC.add(cc);
-        ghiDuLieu();
-    }
-    public void banNha(String soNha){
-        for(ChungCu list: listCC){
-            if(list.getSoNha().equals(soNha)){
-                list.setTinhTrang(true);
-                break;
-            }
-        }
-    }
     public void docDuLieu(){
-        listCC= new ArrayList<>();
+        listKH= new ArrayList<>();
         try{
-            FileReader fr= new FileReader("chungcu.txt");
+            FileReader fr= new FileReader("khachsan.txt");
             BufferedReader br= new BufferedReader(fr);
             String s;
             while((s=br.readLine())!=null){
                 String[] arr= s.split("\\$" );
-                ChungCu cc= new ChungCu(arr[0], Integer.parseInt(arr[1]), Boolean.parseBoolean(arr[2]));
-                listCC.add(cc);
+                KhachHang kh= new KhachHang(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]));
+                listKH.add(kh);
             }
             br.close();
         }catch(IOException e){
@@ -65,17 +42,42 @@ public class Server {
     }
     public void ghiDuLieu(){
         try{
-            FileWriter fw= new FileWriter("chungcu.txt");
+            FileWriter fw= new FileWriter("khacsan.txt");
             BufferedWriter bw= new BufferedWriter(fw);
-            for(ChungCu l: listCC){
-                bw.write(l.getSoNha()+"$"+l.getGiaBan()+"$"+l.getTinhTrang()+"\n");
+            for(KhachHang l: listKH){
+                bw.write(l.getMaKH()+"$"+l.getTenKH()+"$"+l.getloaiPhong()+"$"+l.getSoNgayO()+"\n");
             }
             bw.close();
             fw.close();
         }catch(IOException e){
             e.printStackTrace();
         }
-    } 
+    }
+    public int tinhTienPhong(KhachHang kh){
+       switch(kh.getloaiPhong()){
+           case "S":
+               return kh.getSoNgayO()*500000;
+           case "A":
+               return kh.getSoNgayO()*250000;
+           case "B":
+               return kh.getSoNgayO()*100000;
+       }
+       return 0;
+    }
+    public void themKhachHang(String s){
+        String[] arr= s.split("\\$");
+        KhachHang kh= new KhachHang(arr[0], arr[1], arr[2], Integer.parseInt(arr[3]));
+        listKH.add(kh);
+        ghiDuLieu();
+    }
+    public KhachHang timKiem(String tenKH){
+        for(KhachHang list: listKH){
+            if(list.getTenKH().equals(tenKH)){
+                return list;
+            }
+        }
+        return null;
+    }
     public static void main(String[] args){
         Server sv= new Server();
         sv.docDuLieu();
@@ -85,21 +87,22 @@ public class Server {
             DataInputStream dataIn= new DataInputStream(socket.getInputStream());
             DataOutputStream dataOut= new DataOutputStream(socket.getOutputStream());
             int selection=0;
-            while(selection!=4){
+            while(selection!=3){
                 selection=dataIn.read();
                 switch(selection){
                     case 1:
-                        dataOut.writeUTF(sv.hienThiDanhSach());
-                        break; 
-                    case 2: 
-                        sv.themNha(dataIn.readUTF());
+                        sv.themKhachHang(dataIn.readUTF());
                         break;
-                    case 3:
-                        sv.banNha(dataIn.readUTF());
+                    case 2:
+                        KhachHang kh= sv.timKiem(dataIn.readUTF());
+                        if(kh!=null){
+                            dataOut.writeUTF(Integer.toString(sv.tinhTienPhong(kh)));
+                        }else{
+                            dataOut.writeUTF("Khach hang khong ton tai");
+                        }
                         break;
                 }
             }
-            server.close();
         }catch(IOException e){
             e.printStackTrace();
         }

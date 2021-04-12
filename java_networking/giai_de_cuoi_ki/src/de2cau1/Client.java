@@ -31,6 +31,8 @@ public class Client {
             }else{
                 System.out.println("So Le!");
             }
+            sc.close();
+            socket.close();
         }catch(IOException e){
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
         }

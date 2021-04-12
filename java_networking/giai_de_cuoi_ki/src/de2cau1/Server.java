@@ -26,6 +26,7 @@ public class Server {
                 test=1;
             }
             DataOut.writeInt(test);
+            server.close();
         }catch(IOException e){
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
         }
